@@ -1,9 +1,21 @@
+import { count } from "console";
+import { events } from "../../../data/eventData"
+ 
+
+export interface Event {
+    id: number,
+    name: string,
+    date: Date,
+    capacity: number,
+    registrationCount: number
+}
 
 
-
-export const getAllEventsService = (): string[] => {
+export const getAllEventsService = (): {} => {
     // Logic to process all items from the database
-    return ["Item 1", "Item 2"];
+
+
+    return {events: events, count: events.length};
 };
 
 export const getEventByIdService = (): string[] => {
