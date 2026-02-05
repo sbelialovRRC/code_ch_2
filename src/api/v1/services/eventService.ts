@@ -12,15 +12,13 @@ export interface Event {
 
 
 export const getAllEventsService = (): {} => {
-    // Logic to process all items from the database
-
-
     return {events: events, count: events.length};
 };
 
-export const getEventByIdService = (): string[] => {
-    // Logic to process all items from the database
-    return ["Item 1", "Item 2"];
+export const getEventByIdService = (id: number): Event | undefined => {
+    let event = events.find(x => x.id == id)
+
+    return event;
 };
 
 export const getEVentPopularityService = (): string[] => {
