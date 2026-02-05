@@ -1,0 +1,15 @@
+import { Router } from 'express';
+import { getAllEvents, getEventById, getEventPopularity, createEvent, deleteEvent, updateEvent } from '../controllers/eventController';
+
+const router: Router = Router();
+
+// Define routes
+router.get('/events', getAllEvents);
+router.get('/events/:id', getEventById);
+router.get('/events/:id/popularity', getEventPopularity);
+router.post('/events', createEvent);
+router.put('/events/:id', updateEvent);
+router.delete('/events/:id', deleteEvent);
+
+
+export default router;
