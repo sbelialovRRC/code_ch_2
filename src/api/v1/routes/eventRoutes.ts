@@ -8,8 +8,8 @@ router.get('/events', getAllEvents);
 router.get('/events/:id', getEventById);
 router.get('/events/:id/popularity', getEventPopularity);
 router.post('/events', createEvent);
-router.put('/events/:id', updateEvent);
-router.delete('/events/:id', deleteEvent);
+router.put('/events/:id', deleteEvent);
+router.delete('/events/:id', updateEvent);
 
 
 export default router;

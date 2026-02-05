@@ -1,31 +1,34 @@
 import { Request, Response } from "express";
+import { getAllEventsService, getEVentPopularityService, getEventByIdService, createEventService, updateEventService, deleteEventService } from "../services/eventService"
 
 export const getAllEvents = (req: Request, res: Response) => {
     // Logic to get all items
-    res.status(200).send("Get all items");
+
+    let result = getAllEventsService()
+    res.status(200).json(result);
 };
 
 export const getEventById = (req: Request, res: Response) => {
-    // Logic to get all items
-    res.status(200).send("Get all items");
+    let result = getEventByIdService()
+    res.status(200).json(result);
 };
 
 export const getEventPopularity = (req: Request, res: Response) => {
-    // Logic to get all items
-    res.status(200).send("Get all items");
+    let result = getEVentPopularityService()
+    res.status(200).json(result);
 };
 
 export const createEvent = (req: Request, res: Response) => {
-    // Logic to create a new item
-    res.status(201).send("Create a new item");
+    let result = createEventService("test")
+    res.status(200).json(result);
 };
 
 export const updateEvent = (req: Request, res: Response) => {
-    // Logic to update an item
-    res.status(200).send("Update an item");
+    let result = updateEventService(12,"test")
+    res.status(200).json(result);
 };
 
 export const deleteEvent = (req: Request, res: Response) => {
-    // Logic to delete an item
-    res.status(200).send("Delete an item");
+    let result = deleteEventService(12)
+    res.status(200).json(result);
 };
