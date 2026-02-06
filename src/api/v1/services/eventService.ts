@@ -10,8 +10,13 @@ export interface Event {
     registrationCount: number
 }
 
+interface EventsCount {
+    events: Event[],
+    count: number
+}
 
-export const getAllEventsService = (): {} => {
+
+export const getAllEventsService = (): EventsCount => {
     return {events: events, count: events.length};
 };
 
