@@ -27,21 +27,27 @@ export const getEventById = (req: Request, res: Response) => {
 };
 
 export const getEventPopularity = (req: Request, res: Response) => {
-    let result = getEVentPopularityService()
-    res.status(200).json(result);
+    // let result = getEVentPopularityService()
+    res.status(200).json({});
 };
 
 export const createEvent = (req: Request, res: Response) => {
-    let result = createEventService("test")
+    let newEvent = req.body
+
+    let result = createEventService(newEvent)
     res.status(200).json(result);
 };
 
 export const updateEvent = (req: Request, res: Response) => {
+     let newEvent = req.body
+     let id = Number(req.params.id)
+
     let result = updateEventService(12, "test")
     res.status(200).json(result);
 };
 
 export const deleteEvent = (req: Request, res: Response) => {
-    let result = deleteEventService(12)
+        let id = Number(req.params.id)
+    let result = deleteEventService(id)
     res.status(200).json(result);
 };

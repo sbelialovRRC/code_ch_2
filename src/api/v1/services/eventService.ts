@@ -21,15 +21,28 @@ export const getEventByIdService = (id: number): Event | undefined => {
     return event;
 };
 
-export const getEVentPopularityService = (): string[] => {
+export const getEVentPopularityService = (id:number): {} => {
     // Logic to process all items from the database
-    return ["Item 1", "Item 2"];
+// find event
+//     let event = events.find(x => x.id == id);
+
+// let score = (event.registrationCount / event.capacity) * 100;
+
+//     return  {
+//         event: event,
+//         spotsRemanin: event?.capacity - event?.registrationCount,
+//         popularityScore: score,
+//         popularityTier: getPopluartiTier(score)
+//     };
+
+return {}
 };
 
 
-export const createEventService = (item: string): string => {
+export const createEventService = (newEvent: Event): Event => {
     // Logic to add a new item to the database
-    return "Item added";
+    events.push(newEvent)
+    return newEvent;
 };
 
 export const updateEventService = (id: number, item: string): string => {
@@ -37,7 +50,15 @@ export const updateEventService = (id: number, item: string): string => {
     return "Item updated";
 };
 
-export const deleteEventService = (id: number): string => {
+export const deleteEventService = (id: number) => {
     // Logic to delete an item from the database
-    return "Item deleted";
+    let itemtoDeleteIndex = events.findIndex(x => x.id === id);
+
+    if (-1){
+        return;
+    }
+
+    events.splice(itemtoDeleteIndex, 1)
+
+    return;
 };
