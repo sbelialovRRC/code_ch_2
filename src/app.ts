@@ -1,12 +1,12 @@
 import express, { Express } from "express";
-import eventRoutes from "./api/v1/routes/eventRoutes";
+import productRoutes from "./api/v1/routes/productRoutes";
 
 // Initialize Express application
 const app: Express = express();
 
 app.use(express.json());
 
-app.use("/api/v1", eventRoutes);
+app.use("/api/v1", productRoutes);
 
 // Define a route
 app.get("/", (req, res) => {
