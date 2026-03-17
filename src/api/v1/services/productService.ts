@@ -1,5 +1,5 @@
 import Product from "../../../models/product"
-import  {addDocument} from "../repository/productRepo"
+import  {addDocument, getAllProducts, deleteProduct} from "../repository/productRepo"
 
 // export const getAllEventsService = (): EventsCount => {
 //     return {events: events, count: events.length};
@@ -35,6 +35,18 @@ export const createProductService = async (newProduct: Product): Promise<string>
     let newProductId = await addDocument(newProduct)
 
     return newProductId;
+};
+
+export const getAllProductsService = async (): Promise<(Product & { id: string })[]> => {
+    // Logic to retrieve all products from the database
+    const products = await getAllProducts();
+    return products;
+};
+
+export const deleteProductService = async (productId: string): Promise<boolean> => {
+    // Logic to delete a product from the database
+    const result = await deleteProduct(productId);
+    return result;
 };
 
 // export const updateEventService = (id: number, item: string): string => {

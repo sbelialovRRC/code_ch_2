@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createProduct , getProductById} from '../controllers/eventController';
+import { createProduct, getProductById, getAllProducts, deleteProduct } from '../controllers/eventController';
 import { validateRequest } from "../middleware/validate";
 import { productSchemas } from "../validation/productSchemas";
 import authenticate from "../middleware/authenticate";
@@ -59,9 +59,51 @@ router.post('/products', validateRequest(productSchemas.create), createProduct);
 
 /**
  * @openapi
+ * /products:
+ *   get:
+ *     summary: Retrieve all products
+ *     description: Get a list of all products available in the system
+ *     tags: [Products]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       '200':
+ *         description: Successfully retrieved all products
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     allOf:
+ *                       - type: object
+ *                         properties:
+ *                           id:
+ *                             type: string
+ *                             description: Product ID from Firestore
+ *                       - $ref: '#/components/schemas/Product'
+ *                 count:
+ *                   type: integer
+ *                   description: Total number of products
+ *                   example: 5
+ *       '401':
+ *         description: Unauthorized - Missing or invalid authentication token
+ *       '500':
+ *         description: Internal server error
+ */
+router.get('/products', authenticate, getAllProducts);
+
+
+/**
+ * @openapi
  * /products/{productId}:
  *   get:
- *     summary: Retrieve a list of products with optional filtering
+ *     summary: Retrieve a product by ID
  *     tags: [Products]
  *     parameters:
  *       - name: productId
@@ -86,8 +128,72 @@ router.post('/products', validateRequest(productSchemas.create), createProduct);
  *                price:
  *                  type: number
  */
-router.get('/products/:id', authenticate, getProductById);  
+router.get('/products/:id', authenticate, getProductById);
 
+
+/**
+ * @openapi
+ * /products/{productId}:
+ *   delete:
+ *     summary: Delete a product by ID
+ *     description: Permanently delete a product from the system
+ *     tags: [Products]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: productId
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the product to delete
+ *         example: "prod_abc123"
+ *     responses:
+ *       '200':
+ *         description: Product deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Product with ID prod_abc123 deleted successfully"
+ *       '400':
+ *         description: Bad request - Product ID is required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 error:
+ *                   type: string
+ *                   example: "Product ID is required"
+ *       '401':
+ *         description: Unauthorized - Missing or invalid authentication token
+ *       '404':
+ *         description: Product not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 error:
+ *                   type: string
+ *                   example: "Product not found"
+ *       '500':
+ *         description: Internal server error
+ */
+router.delete('/products/:id', authenticate, deleteProduct);
 
 
 export default router;

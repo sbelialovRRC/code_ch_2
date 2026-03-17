@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { createProductService } from "../services/productService"
+import { createProductService, getAllProductsService, deleteProductService } from "../services/productService"
 import {HTTP_STATUS} from "../../../constants/httpConstants"
 
 // export const getAllEvents = (req: Request, res: Response) => {
@@ -33,16 +33,59 @@ export const createProduct = async (req: Request, res: Response) => {
     res.status(200).json(result);
 };
 
+export const getAllProducts = async (req: Request, res: Response) => {
+    try {
+        const products = await getAllProductsService();
+        res.status(HTTP_STATUS.OK).json({
+            success: true,
+            data: products,
+            count: products.length
+        });
+    } catch (error) {
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            error: "Failed to retrieve products"
+        });
+    }
+};
+
+export const deleteProduct = async (req: Request, res: Response) => {
+    try {
+        const productId = req.params.id;
+
+        if (!productId) {
+            res.status(HTTP_STATUS.BAD_REQUEST).json({
+                success: false,
+                error: "Product ID is required"
+            });
+            return;
+        }
+
+        const result = await deleteProductService(productId);
+
+        if (result) {
+            res.status(HTTP_STATUS.OK).json({
+                success: true,
+                message: `Product with ID ${productId} deleted successfully`
+            });
+        } else {
+            res.status(HTTP_STATUS.NOT_FOUND).json({
+                success: false,
+                error: "Product not found"
+            });
+        }
+    } catch (error) {
+        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            error: "Failed to delete product"
+        });
+    }
+};
+
 // export const updateEvent = (req: Request, res: Response) => {
 //      let newEvent = req.body
 //      let id = Number(req.params.id)
 
 //     let result = updateEventService(12, "test")
-//     res.status(200).json(result);
-// };
-
-// export const deleteEvent = (req: Request, res: Response) => {
-//         let id = Number(req.params.id)
-//     let result = deleteEventService(id)
 //     res.status(200).json(result);
 // };
