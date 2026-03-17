@@ -11,10 +11,13 @@ const router: Router = Router();
 // Define routes
 /**
  * @openapi
- * /users:
+ * /products:
  *   post:
  *     summary: Create a new product
+ *     description: Add a new product to the inventory
  *     tags: [Products]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -23,36 +26,58 @@ const router: Router = Router();
  *             type: object
  *             required:
  *               - name
- *               - email
+ *               - sku
+ *               - quantity
+ *               - price
+ *               - category
  *             properties:
  *               name:
  *                 type: string
  *                 minLength: 2
- *                 maxLength: 50
- *                 example: "John Doe"
- *               email:
+ *                 maxLength: 80
+ *                 example: "Wireless Headphones"
+ *               sku:
  *                 type: string
- *                 format: email
- *                 example: "john@example.com"
- *               role:
+ *                 pattern: '^[A-Z]{3}\d{4}$'
+ *                 example: "ELC0042"
+ *               quantity:
+ *                 type: integer
+ *                 minimum: 0
+ *                 example: 150
+ *               price:
+ *                 type: number
+ *                 format: float
+ *                 minimum: 0
+ *                 example: 49.99
+ *               category:
  *                 type: string
- *                 enum: [user, admin]
- *                 default: user
+ *                 enum: [electronics, clothing, food, tools, other]
+ *                 example: "electronics"
  *     responses:
  *       '201':
  *         description: Product created successfully
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Product'
+ *               type: string
+ *               example: "prod_abc123"
+ *               description: ID of the newly created product
  *       '400':
  *         description: Invalid input data
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Error'
- *       '409':
- *         description: User with this email already exists
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 error:
+ *                   type: string
+ *       '401':
+ *         description: Unauthorized - Missing or invalid authentication token
+ *       '500':
+ *         description: Internal server error
  */
 router.post('/products', validateRequest(productSchemas.create), createProduct);
 
@@ -124,14 +149,26 @@ router.get('/products', authenticate, getAllProducts);
  *             schema:
  *               type: object
  *               properties:
- *                 id:
- *                   type: integer
- *                 name:
- *                   type: string
- *                 price:
- *                   type: number
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   $ref: '#/components/schemas/Product'
  *       '401':
  *         description: Unauthorized - Missing or invalid authentication token
+ *       '404':
+ *         description: Product not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 error:
+ *                   type: string
+ *                   example: "Product not found"
  *       '500':
  *         description: Internal server error
  */
@@ -140,7 +177,7 @@ router.get('/products/:id', authenticate, getProductById);
 
 /**
  * @openapi
- * /products/{productId}:
+ * /products/{id}:
  *   delete:
  *     summary: Delete a product by ID
  *     description: Permanently delete a product from the system
@@ -148,7 +185,7 @@ router.get('/products/:id', authenticate, getProductById);
  *     security:
  *       - bearerAuth: []
  *     parameters:
- *       - name: productId
+ *       - name: id
  *         in: path
  *         required: true
  *         schema:
