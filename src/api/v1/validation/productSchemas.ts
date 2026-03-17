@@ -1,5 +1,6 @@
 import Joi, { ObjectSchema } from "joi";
 
+
 // Post operation schemas organized by request part
 export const productSchemas = {
     // POST /posts - Create new post

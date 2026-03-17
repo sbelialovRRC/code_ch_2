@@ -9,22 +9,17 @@ import {HTTP_STATUS} from "../../../constants/httpConstants"
 //     res.status(HTTP_STATUS.OK).json(result);
 // };
 
-// export const getEventById = (req: Request, res: Response) => {
-//     let id = Number(req.params.id)
+export const getProductById = (req: Request, res: Response) => {
+    let id = Number(req.params.id)
 
-//     if (Number.isNaN(id)) {
-//         res.status(HTTP_STATUS.BAD_REQUEST).json({ error: "id must be convertible toi number" });
-//         return;
-//     }
+    if (Number.isNaN(id)) {
+        res.status(HTTP_STATUS.BAD_REQUEST).json({ error: "id must be convertible toi number" });
+        return;
+    }
 
-//     let result = getEventByIdService(id)
 
-//     if (result === undefined) {
-//         res.status(HTTP_STATUS.NOT_FOUND).json({ error: `Event with ${id} not found` });
-//     }
-
-//     res.status(HTTP_STATUS.OK).json(result);
-// };
+    res.status(HTTP_STATUS.OK).json({id: 12, name: "test", price: 12.99});
+};
 
 // export const getEventPopularity = (req: Request, res: Response) => {
 //     // let result = getEVentPopularityService()
