@@ -1,5 +1,5 @@
 import { db } from "../config/firebaseConfig";
-import { DocumentReference } from "firebase-admin/firestore";
+import { DocumentReference, QuerySnapshot } from "firebase-admin/firestore";
 import Product from "src/models/product";
 
 export const addDocument = async (product: Product): Promise<string> => {
@@ -13,4 +13,41 @@ export const addDocument = async (product: Product): Promise<string> => {
     // The data is passed as an object with fields and their values
     await docRef.set(product);
     return docRef.id;
+};
+
+export const getAllProducts = async (): Promise<(Product & { id: string })[]> => {
+    // Retrieve all products from the Firestore collection
+    const snapshot: QuerySnapshot = await db.collection("products").get();
+    
+    const products: (Product & { id: string })[] = [];
+    snapshot.forEach((doc) => {
+        const productData = doc.data() as Product;
+        products.push({
+            ...productData,
+            id: doc.id
+        });
+    });
+    
+    return products;
+};
+
+export const deleteProduct = async (productId: string): Promise<boolean> => {
+    // Delete a product by its ID from the Firestore collection
+    await db.collection("products").doc(productId).delete();
+    return true;
+};
+
+export const getProductById = async (productId: string): Promise<(Product & { id: string }) | null> => {
+    // Retrieve a specific product by its ID from Firestore
+    const docSnapshot = await db.collection("products").doc(productId).get();
+    
+    if (!docSnapshot.exists) {
+        return null;
+    }
+    
+    const productData = docSnapshot.data() as Product;
+    return {
+        ...productData,
+        id: docSnapshot.id
+    };
 };
