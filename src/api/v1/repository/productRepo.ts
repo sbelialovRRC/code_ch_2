@@ -36,3 +36,18 @@ export const deleteProduct = async (productId: string): Promise<boolean> => {
     await db.collection("products").doc(productId).delete();
     return true;
 };
+
+export const getProductById = async (productId: string): Promise<(Product & { id: string }) | null> => {
+    // Retrieve a specific product by its ID from Firestore
+    const docSnapshot = await db.collection("products").doc(productId).get();
+    
+    if (!docSnapshot.exists) {
+        return null;
+    }
+    
+    const productData = docSnapshot.data() as Product;
+    return {
+        ...productData,
+        id: docSnapshot.id
+    };
+};

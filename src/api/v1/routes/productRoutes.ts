@@ -101,32 +101,39 @@ router.get('/products', authenticate, getAllProducts);
 
 /**
  * @openapi
- * /products/{productId}:
+ * /products/{id}:
  *   get:
  *     summary: Retrieve a product by ID
+ *     description: Fetch details of a specific product using its ID
  *     tags: [Products]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
- *       - name: productId
+ *       - name: id
  *         in: path
  *         required: true
  *         schema:
- *           type: integer
- *           default: 1
- *         description: Id of the product to retrieve
+ *           type: string
+ *         description: The ID of the product to retrieve
+ *         example: "prod_abc123"
  *     responses:
  *       '200':
- *        description: A product object
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                id:
- *                  type: integer
- *                name:
- *                  type: string
- *                price:
- *                  type: number
+ *         description: Product details retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                 name:
+ *                   type: string
+ *                 price:
+ *                   type: number
+ *       '401':
+ *         description: Unauthorized - Missing or invalid authentication token
+ *       '500':
+ *         description: Internal server error
  */
 router.get('/products/:id', authenticate, getProductById);
 
