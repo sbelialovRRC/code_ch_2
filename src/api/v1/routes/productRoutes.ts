@@ -121,7 +121,7 @@ router.post('/products', validateRequest(productSchemas.create), createProduct);
  *       '500':
  *         description: Internal server error
  */
-router.get('/products', authenticate, getAllProducts);
+router.get('/products', getAllProducts);
 
 
 /**
@@ -237,7 +237,7 @@ router.get('/products/:id', authenticate, getProductById);
  *       '500':
  *         description: Internal server error
  */
-router.delete('/products/:id', authenticate, deleteProduct);
+router.delete('/products/:id', deleteProduct);
 
 
 export default router;
